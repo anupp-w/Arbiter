@@ -183,10 +183,10 @@ def generate_answer(
         raw = response.choices[0].message.content
         data = json.loads(raw)
         
-    except (json.JSONDecodeError, Exception) as e:
+    except Exception as e:
         print(f"❌ Generation error: {e}")
         return (
-            "An error occurred during answer generation. Please try again.",
+            f"An error occurred during answer generation: {str(e)}\n\n(If this is a RateLimitError, wait 60 seconds for your Groq limits to reset!)",
             []
         )
     
