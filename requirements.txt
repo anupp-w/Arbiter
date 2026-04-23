@@ -17,6 +17,7 @@ groq>=0.15.0
 # --- Embeddings & Reranking (local, no API key needed) ---
 sentence-transformers>=3.0.0
 torch>=2.0.0
+torchvision>=0.15.0
 
 # --- Vector Search (local FAISS) ---
 faiss-cpu>=1.8.0
