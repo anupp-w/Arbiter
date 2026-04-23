@@ -90,7 +90,14 @@ async def lifespan(app: FastAPI):
         print("✅ Reranker ready")
     except Exception as e:
         print(f"❌ Warning: Reranker failed to load: {e}")
-    
+        
+    # Setup Tracing (Phoenix)
+    try:
+        from services.tracing.setup import setup_tracing
+        setup_tracing(app)
+    except Exception as e:
+        print(f"❌ Warning: Tracing setup failed: {e}")
+        
     # Load FAISS indexes from disk (if previously saved)
     # The pipeline.py module already calls _load_state() on import,
     # which loads both FAISS indexes and rebuilds BM25.
