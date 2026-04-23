@@ -1,50 +1,54 @@
 # ============================================================
 # Arbiter — Python Dependencies
 # ============================================================
-# Install with: pip install -r requirements.txt
-# All free. No paid APIs required.
+# Install with:
+#   .\venv\Scripts\pip install -r requirements.txt
+#
+# All packages verified compatible with Python 3.14 on Windows.
 # ============================================================
 
 # --- Web Framework ---
-fastapi==0.115.6           # The API framework (like Express.js but for Python)
-uvicorn[standard]==0.34.0  # The server that runs FastAPI (like nodemon)
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
 
 # --- AI / LLM ---
-groq==0.15.0               # Client for Groq API (Llama 3.3 70B)
+groq==0.15.0
 
-# --- Embeddings & Reranking (all run locally, no API) ---
-sentence-transformers==3.3.1  # Loads bge-small and cross-encoder models
-torch>=2.0.0               # PyTorch - the engine behind the models
+# --- Embeddings & Reranking (local, no API key needed) ---
+sentence-transformers==3.3.1
+torch==2.11.0
 
-# --- Vector Search ---
-faiss-cpu==1.9.0            # Facebook's vector similarity search (CPU version)
-# Note: We use faiss-cpu even with GPU because the index is small enough.
-# faiss-gpu requires CUDA toolkit setup which adds complexity for no gain at demo scale.
+# --- Vector Search (local FAISS) ---
+# Note: faiss-cpu 1.13.x is the latest available as of 2025
+faiss-cpu==1.13.2
 
 # --- Sparse Retrieval ---
-rank-bm25==0.2.2            # BM25 keyword matching (like Google's original algorithm)
+rank-bm25==0.2.2
 
 # --- PDF Parsing ---
-pdfplumber==0.11.4          # Extracts text from PDFs while preserving structure
+pdfplumber==0.11.4
 
 # --- Token Counting ---
-tiktoken==0.8.0             # OpenAI's fast tokenizer (counts tokens accurately)
+tiktoken==0.8.0
 
 # --- Data Validation ---
-pydantic==2.10.3            # Defines the "shape" of your data (like TypeScript types)
-pydantic-settings==2.7.0    # Reads .env files into Pydantic models
+pydantic==2.10.3
+pydantic-settings==2.7.0
 
-# --- Async HTTP (for future arXiv API support) ---
-httpx==0.28.1               # Like requests, but supports async
+# --- Async HTTP ---
+httpx==0.28.1
 
 # --- UI ---
-streamlit==1.41.1           # The frontend framework (Python → web app)
+streamlit==1.41.1
 
-# --- Observability (local, no API) ---
-arize-phoenix==8.0.0        # Local tracing server with beautiful UI
-opentelemetry-api==1.29.0   # Standard tracing protocol
-opentelemetry-sdk==1.29.0   # Standard tracing protocol
+# --- Observability (local Phoenix, no API key) ---
+arize-phoenix==8.0.0
+opentelemetry-api==1.29.0
+opentelemetry-sdk==1.29.0
 
 # --- Utilities ---
-python-dotenv==1.0.1        # Loads .env file into environment variables
-python-multipart==0.0.20    # Required by FastAPI for file uploads
+python-dotenv==1.0.1
+python-multipart==0.0.20
+
+# --- File upload support ---
+aiofiles==23.2.1
