@@ -1,0 +1,50 @@
+# ============================================================
+# Arbiter — Python Dependencies
+# ============================================================
+# Install with: pip install -r requirements.txt
+# All free. No paid APIs required.
+# ============================================================
+
+# --- Web Framework ---
+fastapi==0.115.6           # The API framework (like Express.js but for Python)
+uvicorn[standard]==0.34.0  # The server that runs FastAPI (like nodemon)
+
+# --- AI / LLM ---
+groq==0.15.0               # Client for Groq API (Llama 3.3 70B)
+
+# --- Embeddings & Reranking (all run locally, no API) ---
+sentence-transformers==3.3.1  # Loads bge-small and cross-encoder models
+torch>=2.0.0               # PyTorch - the engine behind the models
+
+# --- Vector Search ---
+faiss-cpu==1.9.0            # Facebook's vector similarity search (CPU version)
+# Note: We use faiss-cpu even with GPU because the index is small enough.
+# faiss-gpu requires CUDA toolkit setup which adds complexity for no gain at demo scale.
+
+# --- Sparse Retrieval ---
+rank-bm25==0.2.2            # BM25 keyword matching (like Google's original algorithm)
+
+# --- PDF Parsing ---
+pdfplumber==0.11.4          # Extracts text from PDFs while preserving structure
+
+# --- Token Counting ---
+tiktoken==0.8.0             # OpenAI's fast tokenizer (counts tokens accurately)
+
+# --- Data Validation ---
+pydantic==2.10.3            # Defines the "shape" of your data (like TypeScript types)
+pydantic-settings==2.7.0    # Reads .env files into Pydantic models
+
+# --- Async HTTP (for future arXiv API support) ---
+httpx==0.28.1               # Like requests, but supports async
+
+# --- UI ---
+streamlit==1.41.1           # The frontend framework (Python → web app)
+
+# --- Observability (local, no API) ---
+arize-phoenix==8.0.0        # Local tracing server with beautiful UI
+opentelemetry-api==1.29.0   # Standard tracing protocol
+opentelemetry-sdk==1.29.0   # Standard tracing protocol
+
+# --- Utilities ---
+python-dotenv==1.0.1        # Loads .env file into environment variables
+python-multipart==0.0.20    # Required by FastAPI for file uploads

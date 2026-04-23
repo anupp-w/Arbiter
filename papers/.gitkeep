@@ -1,0 +1,3 @@
+# This file marks the papers directory as tracked by git.
+# The actual PDF files are excluded by .gitignore.
+# Place your 7 research papers here before running ingestion.

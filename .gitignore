@@ -1,0 +1,57 @@
+# ============================================================
+# Arbiter .gitignore
+# Keeps secrets, cache, and large files out of GitHub
+# ============================================================
+
+# ---------- Secrets ----------
+# Your .env file contains your Groq API key.
+# NEVER push this to GitHub. Anyone who sees it can use your key.
+.env
+# Streamlit secrets (contains API key for local dev)
+.streamlit/secrets.toml
+
+# ---------- Python cache ----------
+# Python creates these automatically when you run code.
+# They're machine-specific junk — no reason to track them.
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# ---------- Virtual environment ----------
+# Your local Python environment. Each machine creates its own.
+venv/
+.venv/
+env/
+
+# ---------- Research papers (PDFs) ----------
+# These are too large for GitHub and may have copyright issues.
+# The app rebuilds indexes from them, so they're not needed in the repo.
+papers/*.pdf
+
+# ---------- FAISS indexes ----------
+# These are binary files rebuilt from your papers.
+# They'll be regenerated on first run.
+backend/data/faiss_indexes/
+
+# ---------- Uploaded documents ----------
+# Raw uploads from users — not needed in repo
+backend/data/documents/*.pdf
+
+# ---------- IDE / Editor ----------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---------- OS junk ----------
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# ---------- Misc ----------
+*.log
+.pytest_cache/
+dist/
+build/
+*.egg-info/
