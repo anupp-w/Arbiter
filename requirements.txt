@@ -8,47 +8,46 @@
 # ============================================================
 
 # --- Web Framework ---
-fastapi==0.115.6
-uvicorn[standard]==0.34.0
+fastapi>=0.100.0
+uvicorn[standard]>=0.25.0
 
 # --- AI / LLM ---
-groq==0.15.0
+groq>=0.15.0
 
 # --- Embeddings & Reranking (local, no API key needed) ---
-sentence-transformers==3.3.1
-torch==2.11.0
+sentence-transformers>=3.0.0
+torch>=2.0.0
 
 # --- Vector Search (local FAISS) ---
-# Note: faiss-cpu 1.13.x is the latest available as of 2025
-faiss-cpu==1.13.2
+faiss-cpu>=1.8.0
 
 # --- Sparse Retrieval ---
-rank-bm25==0.2.2
+rank-bm25>=0.2.2
 
 # --- PDF Parsing ---
-pdfplumber==0.11.4
+pdfplumber>=0.11.0
 
 # --- Token Counting ---
-tiktoken==0.8.0
+tiktoken>=0.7.0
 
 # --- Data Validation ---
-pydantic==2.10.3
-pydantic-settings==2.7.0
+pydantic>=2.7.0
+pydantic-settings>=2.2.0
 
 # --- Async HTTP ---
-httpx==0.28.1
+httpx>=0.27.0
 
 # --- UI ---
-streamlit==1.41.1
+streamlit>=1.35.0
 
 # --- Observability (local Phoenix, no API key) ---
-arize-phoenix==14.11.0
-opentelemetry-api==1.29.0
-opentelemetry-sdk==1.29.0
+arize-phoenix>=4.0.0
+opentelemetry-api>=1.20.0
+opentelemetry-sdk>=1.20.0
 
 # --- Utilities ---
-python-dotenv==1.0.1
-python-multipart==0.0.20
+python-dotenv>=1.0.0
+python-multipart>=0.0.18
 
 # --- File upload support ---
-aiofiles==23.2.1
+aiofiles>=23.2.0
