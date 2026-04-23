@@ -57,19 +57,19 @@ and a user's question. Your job is to answer the question using ONLY the provide
 
 STRICT RULES:
 1. Every claim you make MUST be supported by at least one proposition from the list.
-2. Reference propositions by their ID (e.g., "prop-abc-123").
-3. If the propositions don't contain enough information to answer the question, say so explicitly.
-4. Do NOT invent information not present in the propositions.
-5. If contradictions exist between papers, present BOTH sides — do not pick one.
-6. Write the "answer" field as a clear, readable paragraph for a general audience.
+2. In the "claims" list, you MUST reference propositions by their ID (e.g., "prop-abc-123") in the "source_ids" array.
+3. In the main "answer" field, write a clear, fluid, conversational paragraph. Do NOT include raw proposition IDs (like "prop-abc") in the main answer text. Just write naturally.
+4. If the propositions don't contain enough information to answer the question, say so explicitly.
+5. Do NOT invent information not present in the propositions.
+6. If contradictions exist between papers, present BOTH sides — do not pick one.
 
 Always respond with valid JSON only. No preamble, no markdown.
 Output format:
 {
-  "answer": "A clear prose answer to the question, written in complete sentences.",
+  "answer": "A clear, natural prose answer to the question, written in complete sentences without any ugly prop-IDs.",
   "claims": [
     {
-      "text": "One specific claim from your answer.",
+      "text": "One specific claim extracted from your answer.",
       "source_ids": ["proposition-id-1", "proposition-id-2"],
       "confidence": 0.9
     }
