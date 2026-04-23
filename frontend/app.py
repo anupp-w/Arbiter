@@ -84,6 +84,9 @@ try:
     from models.common import ClaimStatus, DocumentStatus
     from config import settings
     
+    # FORCE the model to 8B to bypass Streamlit's aggressive module caching!
+    settings.groq_model = "llama-3.1-8b-instant"
+    
     DIRECT_MODE = True
 
 except ImportError as e:
