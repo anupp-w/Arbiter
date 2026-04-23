@@ -50,8 +50,8 @@ class Settings(BaseSettings):
         description="Your Groq API key from https://console.groq.com/keys"
     )
     groq_model: str = Field(
-        default="llama-3.3-70b-versatile",
-        description="Which LLM to use on Groq. Llama 3.3 70B is the sweet spot."
+        default="llama-3.1-8b-instant",
+        description="Which LLM to use on Groq. Llama 3.1 8B has higher rate limits."
     )
     
     # ---- Embeddings ----
