@@ -367,7 +367,8 @@ def render_sidebar():
         st.markdown("### 📚 Indexed Papers")
         
         if DIRECT_MODE:
-            docs = get_all_documents()
+            # Convert Pydantic models to dicts so they match the HTTP JSON format
+            docs = [d.model_dump(mode="json") for d in get_all_documents()]
         else:
             try:
                 resp = requests.get(f"{BACKEND_URL}/documents", timeout=5)
