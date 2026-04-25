@@ -1,5 +1,5 @@
 # ============================================================
-# backend/main.py — FastAPI Application Entry Point
+# backend/main.py - FastAPI Application Entry Point
 # ============================================================
 #
 # WHAT THIS FILE DOES:
@@ -10,7 +10,7 @@
 #
 # LIFESPAN (the startup/shutdown hook):
 # ---------------------------------------
-# FastAPI has a "lifespan" concept — code that runs when the 
+# FastAPI has a "lifespan" concept - code that runs when the 
 # server STARTS and when it STOPS. We use this to:
 #   ON STARTUP: Load the embedding model, reranker, FAISS indexes
 #   ON SHUTDOWN: Save any final state (handled automatically)
@@ -63,52 +63,52 @@ async def lifespan(app: FastAPI):
     # STARTUP
     # ============================================================
     print("\n" + "="*60)
-    print("🚀 Starting Arbiter API Server")
+    print(" Starting Arbiter API Server")
     print("="*60)
     
     # Create all required directories
     settings.data_dir.mkdir(parents=True, exist_ok=True)
     settings.faiss_dir.mkdir(parents=True, exist_ok=True)
     settings.documents_dir.mkdir(parents=True, exist_ok=True)
-    print("📁 Data directories created/verified")
+    print(" Data directories created/verified")
     
     # Pre-load the embedding model (downloads from HuggingFace on first run)
-    # This is the EXPENSIVE operation — takes 2-5 seconds.
-    # But it only happens once — all subsequent requests are fast.
-    print("\n📦 Loading models (this may take a moment on first run)...")
+    # This is the EXPENSIVE operation - takes 2-5 seconds.
+    # But it only happens once - all subsequent requests are fast.
+    print("\n Loading models (this may take a moment on first run)...")
     try:
         from services.retrieval.embedder import get_embedder
         embedder = get_embedder()
-        print("✅ Embedding model ready")
+        print(" Embedding model ready")
     except Exception as e:
-        print(f"❌ Warning: Embedding model failed to load: {e}")
+        print(f" Warning: Embedding model failed to load: {e}")
     
     # Pre-load the reranker
     try:
         from services.retrieval.reranker import get_reranker
         reranker = get_reranker()
-        print("✅ Reranker ready")
+        print(" Reranker ready")
     except Exception as e:
-        print(f"❌ Warning: Reranker failed to load: {e}")
+        print(f" Warning: Reranker failed to load: {e}")
         
     # Setup Tracing (Phoenix)
     try:
         from services.tracing.setup import setup_tracing
         setup_tracing(app)
     except Exception as e:
-        print(f"❌ Warning: Tracing setup failed: {e}")
+        print(f" Warning: Tracing setup failed: {e}")
         
     # Load FAISS indexes from disk (if previously saved)
     # The pipeline.py module already calls _load_state() on import,
     # which loads both FAISS indexes and rebuilds BM25.
     try:
         import services.ingestion.pipeline  # triggers _load_state()
-        print("✅ Document index loaded")
+        print(" Document index loaded")
     except Exception as e:
-        print(f"❌ Warning: State loading failed: {e}")
+        print(f" Warning: State loading failed: {e}")
     
     print("\n" + "="*60)
-    print("✅ Arbiter is ready!")
+    print(" Arbiter is ready!")
     print(f"   API docs: http://localhost:{settings.api_port}/docs")
     print("="*60 + "\n")
     
@@ -119,14 +119,14 @@ async def lifespan(app: FastAPI):
     # ============================================================
     # SHUTDOWN (code after yield runs when server stops)
     # ============================================================
-    print("\n👋 Arbiter shutting down...")
+    print("\n Arbiter shutting down...")
 
 
 # ============================================================
 # CREATE THE FASTAPI APP
 # ============================================================
 app = FastAPI(
-    title="Arbiter — Multi-Document Research Synthesizer",
+    title="Arbiter - Multi-Document Research Synthesizer",
     description=(
         "An agentic RAG system with contradiction-aware retrieval. "
         "Upload research papers, ask questions, and get structured answers "

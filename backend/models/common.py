@@ -1,5 +1,5 @@
 # ============================================================
-# models/common.py — Shared Enums and Base Types
+# models/common.py - Shared Enums and Base Types
 # ============================================================
 #
 # WHAT ARE ENUMS?
@@ -69,27 +69,27 @@ class SectionType(str, Enum):
 
 class ClaimStatus(str, Enum):
     """
-    The THREE claim statuses — this is the entire identity of Arbiter.
+    The THREE claim statuses - this is the entire identity of Arbiter.
     
     Every claim in our generated answer gets exactly one of these labels:
     
-    CONSENSUS     → 🟢 Multiple papers agree on this claim.
+    CONSENSUS     →  Multiple papers agree on this claim.
                      Example: "Transformers outperform RNNs on NLP tasks"
                      (BERT, GPT-3, and RoBERTa all say this)
     
-    DISPUTED      → 🔴 Papers DISAGREE on this claim. Both sides shown.
+    DISPUTED      →  Papers DISAGREE on this claim. Both sides shown.
                      Example: "Model size matters more than data size"
                      (Kaplan says yes, Chinchilla says no)
                      THIS IS THE DEMO MOMENT. When a recruiter sees a 
                      red badge with both sides of a disagreement shown 
-                     with their sources — that's the wow factor.
+                     with their sources - that's the wow factor.
     
-    SINGLE_SOURCE → 🟡 Only ONE paper mentions this. Could be true, 
+    SINGLE_SOURCE →  Only ONE paper mentions this. Could be true, 
                      but we can't cross-verify it.
                      Example: "RAG reduces hallucination by 30%"
                      (Only the RAG paper says this, no confirmation)
     
-    INSUFFICIENT  → ⚪ We couldn't find enough evidence to answer.
+    INSUFFICIENT  →  We couldn't find enough evidence to answer.
                      This is better than hallucinating an answer.
     """
     CONSENSUS = "consensus"

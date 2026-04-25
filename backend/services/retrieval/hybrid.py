@@ -1,5 +1,5 @@
 # ============================================================
-# services/retrieval/hybrid.py — Hybrid Retrieval + RRF Fusion
+# services/retrieval/hybrid.py - Hybrid Retrieval + RRF Fusion
 # ============================================================
 #
 # WHAT IS HYBRID RETRIEVAL?
@@ -9,9 +9,9 @@
 # experts for their opinion, then taking a vote.
 #
 # The three search methods:
-# 1. DENSE (FAISS propositions) — finds by MEANING
-# 2. DENSE (FAISS chunks) — finds by CONTEXT
-# 3. SPARSE (BM25) — finds by KEYWORDS
+# 1. DENSE (FAISS propositions) - finds by MEANING
+# 2. DENSE (FAISS chunks) - finds by CONTEXT
+# 3. SPARSE (BM25) - finds by KEYWORDS
 #
 # WHAT IS RRF (Reciprocal Rank Fusion)?
 # --------------------------------------
@@ -19,7 +19,7 @@
 #
 # The problem: each method returns different scores on different scales.
 # FAISS scores are 0-1, BM25 scores can be 0-50+.
-# We can't just add them — that's like adding meters and pounds.
+# We can't just add them - that's like adding meters and pounds.
 #
 # RRF solution: ignore the scores, use only the RANK (position).
 # The formula for each result: score = 1 / (k + rank)
@@ -37,7 +37,7 @@
 #     TOTAL RRF score = 0.0325  ← this result gets boosted!
 #
 # Results that appear in multiple lists get HIGHER scores.
-# This is the "wisdom of crowds" effect — agreement = confidence.
+# This is the "wisdom of crowds" effect - agreement = confidence.
 #
 # WHY k=60?
 # ---------

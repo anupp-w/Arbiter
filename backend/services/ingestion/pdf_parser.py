@@ -1,10 +1,10 @@
 # ============================================================
-# services/ingestion/pdf_parser.py — PDF → Structured Text Blocks
+# services/ingestion/pdf_parser.py - PDF → Structured Text Blocks
 # ============================================================
 #
 # WHAT THIS FILE DOES:
 # --------------------
-# Takes a PDF file and extracts text from it, BUT — and this is key —
+# Takes a PDF file and extracts text from it, BUT - and this is key -
 # it tries to PRESERVE the document structure. Instead of dumping all 
 # text into one giant blob, we detect:
 #   - Section headers (Abstract, Introduction, Methods, etc.)
@@ -53,12 +53,12 @@ class TextBlock:
     """
     A block of text from the PDF with its metadata.
     
-    This is an INTERMEDIATE object — it exists between "raw PDF text" 
+    This is an INTERMEDIATE object - it exists between "raw PDF text" 
     and our final ContextChunk model. Think of it as raw material 
     that the chunker will later process.
     
     We use @dataclass instead of Pydantic here because this is 
-    internal-only — it never goes to the API or UI. Dataclasses 
+    internal-only - it never goes to the API or UI. Dataclasses 
     are simpler and faster for internal data passing.
     """
     text: str                    # The actual text content
@@ -184,7 +184,7 @@ def _detect_section_type(line: str) -> SectionType | None:
     
     # Check if the entire line is uppercase (common for headers like "METHODS")
     if cleaned.isupper() and len(cleaned.split()) <= 5:
-        # It's uppercase and short — probably a header
+        # It's uppercase and short - probably a header
         for keyword, section_type in SECTION_KEYWORDS.items():
             if keyword in cleaned.lower():
                 return section_type
@@ -236,14 +236,14 @@ def parse_pdf(pdf_path: str | Path) -> list[TextBlock]:
     
     # ---- Open and extract text from each page ----
     with pdfplumber.open(str(pdf_path)) as pdf:
-        print(f"📄 Parsing PDF: {pdf_path.name} ({len(pdf.pages)} pages)")
+        print(f" Parsing PDF: {pdf_path.name} ({len(pdf.pages)} pages)")
         
         for page_num, page in enumerate(pdf.pages, start=1):
             # Extract raw text from this page
             raw_text = page.extract_text()
             
             if not raw_text:
-                # Some pages are purely images/figures — skip them
+                # Some pages are purely images/figures - skip them
                 continue
             
             # Split into paragraphs using double newlines or large gaps.
@@ -272,7 +272,7 @@ def parse_pdf(pdf_path: str | Path) -> list[TextBlock]:
                             is_header=True
                         ))
                     else:
-                        # Regular text — tag it with current section
+                        # Regular text - tag it with current section
                         cleaned = _clean_text(line)
                         if len(cleaned) > 20:  # Skip very short lines (page numbers, etc.)
                             blocks.append(TextBlock(
@@ -289,7 +289,7 @@ def parse_pdf(pdf_path: str | Path) -> list[TextBlock]:
     
     for block in blocks:
         if block.is_header:
-            # Headers stay separate — they're structural markers
+            # Headers stay separate - they're structural markers
             merged_blocks.append(block)
         elif (
             merged_blocks 
@@ -306,7 +306,7 @@ def parse_pdf(pdf_path: str | Path) -> list[TextBlock]:
     # Filter out header-only blocks (we don't need to search through them)
     content_blocks = [b for b in merged_blocks if not b.is_header]
     
-    print(f"✅ Extracted {len(content_blocks)} text blocks from {pdf_path.name}")
+    print(f" Extracted {len(content_blocks)} text blocks from {pdf_path.name}")
     
     # Print a summary of sections found
     section_counts: dict[str, int] = {}
@@ -326,7 +326,7 @@ def extract_title_from_pdf(pdf_path: str | Path) -> str:
     2. Fall back to first line of text (usually the title in academic papers)
     3. Fall back to filename
     
-    This is a best-effort extraction. Getting it wrong is fine —
+    This is a best-effort extraction. Getting it wrong is fine -
     the user can always edit the title.
     """
     pdf_path = Path(pdf_path)

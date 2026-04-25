@@ -1,5 +1,5 @@
 # ============================================================
-# services/retrieval/embedder.py — Text → Vector Embedding
+# services/retrieval/embedder.py - Text → Vector Embedding
 # ============================================================
 #
 # WHAT IS AN EMBEDDING?
@@ -77,21 +77,21 @@ class Embedder:
         # and a compatible GPU is detected.
         if torch.cuda.is_available():
             self.device = "cuda"
-            print(f"✅ Embedder using GPU: {torch.cuda.get_device_name(0)}")
+            print(f" Embedder using GPU: {torch.cuda.get_device_name(0)}")
         else:
             self.device = "cpu"
-            print("⚠️  Embedder using CPU (slower but works fine)")
+            print("  Embedder using CPU (slower but works fine)")
         
         # ---- Load the Model ----
         # SentenceTransformer downloads the model from HuggingFace on first run
         # (~90MB download), then caches it locally (~/.cache/huggingface/).
         # Subsequent runs load from cache instantly.
-        print(f"📦 Loading embedding model: {settings.embedding_model}...")
+        print(f" Loading embedding model: {settings.embedding_model}...")
         self.model = SentenceTransformer(
             settings.embedding_model,
             device=self.device
         )
-        print(f"✅ Embedding model loaded! Dimension: {self.model.get_sentence_embedding_dimension()}")
+        print(f" Embedding model loaded! Dimension: {self.model.get_sentence_embedding_dimension()}")
         
         # Sanity check: make sure the model's dimension matches our config.
         # If someone changes the model in .env but forgets to update the dimension,
@@ -111,7 +111,7 @@ class Embedder:
             text: Any string, e.g., "BERT achieves 93.5% on SQuAD."
         
         Returns:
-            A numpy array of shape (384,) — 384 floating-point numbers 
+            A numpy array of shape (384,) - 384 floating-point numbers 
             that represent the meaning of the text.
         
         Example:
@@ -124,7 +124,7 @@ class Embedder:
         # It handles tokenization, padding, and the neural network forward pass.
         # normalize_embeddings=True makes cosine similarity work correctly.
         #   Without normalization: cosine_sim = dot(a,b) / (|a| * |b|)
-        #   With normalization: cosine_sim = dot(a,b) — simpler and faster!
+        #   With normalization: cosine_sim = dot(a,b) - simpler and faster!
         embedding = self.model.encode(
             text,
             normalize_embeddings=True,
@@ -138,13 +138,13 @@ class Embedder:
         
         WHY BATCH?
         ----------
-        GPUs are like buses — they're most efficient when full.
+        GPUs are like buses - they're most efficient when full.
         Embedding 1 text at a time = sending a bus with 1 passenger.
         Embedding 32 at a time = full bus, same fuel cost.
         
         On your 1650Ti (4GB VRAM), batch_size=32 is safe.
         Each text becomes ~384 floats × 4 bytes = ~1.5KB per embedding.
-        32 texts = ~48KB — trivial for 4GB VRAM.
+        32 texts = ~48KB - trivial for 4GB VRAM.
         
         Args:
             texts: List of strings to embed.
@@ -152,7 +152,7 @@ class Embedder:
                        for your 4GB GPU. Increase if you have more VRAM.
         
         Returns:
-            numpy array of shape (len(texts), 384) — one row per text.
+            numpy array of shape (len(texts), 384) - one row per text.
         
         Example:
             >>> vecs = embedder.embed_batch(["hello", "world", "test"])
@@ -195,7 +195,7 @@ def get_embedder() -> Embedder:
     Get the singleton Embedder instance.
     Creates it on first call, returns the same one after that.
     
-    This pattern is called "lazy initialization" — we don't load 
+    This pattern is called "lazy initialization" - we don't load 
     the model until someone actually needs it. This makes imports 
     fast and prevents crashes if the model isn't downloaded yet.
     """

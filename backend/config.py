@@ -1,5 +1,5 @@
 # ============================================================
-# config.py — Arbiter Configuration
+# config.py - Arbiter Configuration
 # ============================================================
 # 
 # WHAT THIS FILE DOES:
@@ -13,13 +13,13 @@
 # Pydantic's BaseSettings class does something magical:
 # it automatically reads your .env file and fills in the values.
 # So if .env has GROQ_API_KEY=gsk_abc123, then settings.groq_api_key
-# will equal "gsk_abc123" — no manual parsing needed.
+# will equal "gsk_abc123" - no manual parsing needed.
 #
 # WHY THIS MATTERS:
 # -----------------
 # 1. ONE place to change any setting (not grep through 20 files)
-# 2. Type safety — if you set a number field to "hello", it yells
-# 3. Defaults — sensible defaults so the app works out of the box
+# 2. Type safety - if you set a number field to "hello", it yells
+# 3. Defaults - sensible defaults so the app works out of the box
 # 4. Secrets stay in .env, never in code
 # ============================================================
 
@@ -57,7 +57,7 @@ class Settings(BaseSettings):
     # ---- Embeddings ----
     # An embedding model converts text into a list of numbers (a "vector")
     # that captures the MEANING of the text. Similar meanings = similar vectors.
-    # bge-small is 384 dimensions — small enough to run on CPU, good enough
+    # bge-small is 384 dimensions - small enough to run on CPU, good enough
     # to be near the top of the MTEB benchmark.
     embedding_model: str = Field(
         default="BAAI/bge-small-en-v1.5",
@@ -72,7 +72,7 @@ class Settings(BaseSettings):
     # After initial retrieval finds ~15 candidates, the reranker scores each
     # one more carefully. Think of retrieval as "casting a wide net" and 
     # reranking as "picking the best fish from the net."
-    # L-12 (12 layers) is more accurate than L-6 (6 layers) — worth it 
+    # L-12 (12 layers) is more accurate than L-6 (6 layers) - worth it 
     # for a portfolio project.
     reranker_model: str = Field(
         default="cross-encoder/ms-marco-MiniLM-L-12-v2",

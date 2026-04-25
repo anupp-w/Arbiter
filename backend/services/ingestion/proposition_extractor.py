@@ -1,5 +1,5 @@
 # ============================================================
-# services/ingestion/proposition_extractor.py — The Core Differentiator
+# services/ingestion/proposition_extractor.py - The Core Differentiator
 # ============================================================
 #
 # THIS IS THE MOST IMPORTANT FILE IN THE ENTIRE PROJECT.
@@ -13,9 +13,9 @@
 # ---------------------------------
 # Think of it like breaking down a paragraph into individual Lego bricks.
 # Each brick (proposition) is:
-#   ✅ One single fact (not two facts combined)
-#   ✅ Self-contained (makes sense without reading the rest of the paper)
-#   ✅ Specific (includes numbers, names, comparisons — not vague)
+#    One single fact (not two facts combined)
+#    Self-contained (makes sense without reading the rest of the paper)
+#    Specific (includes numbers, names, comparisons - not vague)
 #
 # EXAMPLE:
 # --------
@@ -74,10 +74,10 @@ from config import settings
 # EXACTLY what we want: atomic, self-contained, factual claims.
 #
 # Key prompt engineering decisions:
-# 1. "Always respond with valid JSON only" — prevents markdown wrapping
-# 2. Explicit good/bad examples — shows exactly what we mean
-# 3. "NO opinions, NO vague statements" — filters out noise
-# 4. "Include the subject explicitly" — makes propositions self-contained
+# 1. "Always respond with valid JSON only" - prevents markdown wrapping
+# 2. Explicit good/bad examples - shows exactly what we mean
+# 3. "NO opinions, NO vague statements" - filters out noise
+# 4. "Include the subject explicitly" - makes propositions self-contained
 #
 # IMPORTANT: This prompt was iterated on extensively. If you change it,
 # test on 3-4 different paper chunks to make sure it still works.
@@ -88,10 +88,10 @@ EXTRACTION_SYSTEM_PROMPT = """You are a precise factual claim extraction system.
 Your job is to extract EVERY atomic factual claim from the given text.
 
 RULES:
-1. Each claim must be a SINGLE fact — never combine two facts into one sentence.
-2. Each claim must be SELF-CONTAINED — it must make complete sense without reading any other text. Replace pronouns ("it", "they", "our model") with the actual entity name.
-3. Each claim must be SPECIFIC — include numbers, model names, dataset names, and comparisons when present.
-4. Extract ONLY factual claims — NO opinions, NO vague statements, NO references to figures/tables.
+1. Each claim must be a SINGLE fact - never combine two facts into one sentence.
+2. Each claim must be SELF-CONTAINED - it must make complete sense without reading any other text. Replace pronouns ("it", "they", "our model") with the actual entity name.
+3. Each claim must be SPECIFIC - include numbers, model names, dataset names, and comparisons when present.
+4. Extract ONLY factual claims - NO opinions, NO vague statements, NO references to figures/tables.
 5. If the text contains no factual claims (e.g., it's just an outline or table of contents), return an empty list.
 
 GOOD examples (what you should produce):
@@ -113,7 +113,7 @@ def _create_groq_client() -> Groq:
     """
     Create a Groq API client.
     
-    Groq's API is almost identical to OpenAI's API — same concept, 
+    Groq's API is almost identical to OpenAI's API - same concept, 
     same method names, just pointing to Groq's servers instead.
     The benefit: Groq runs Llama 3.3 70B at incredible speed 
     (sometimes 10x faster than OpenAI) and the free tier is generous.
@@ -182,7 +182,7 @@ def extract_propositions_from_chunk(
                     {"role": "user", "content": user_prompt}
                 ],
                 # temperature=0.0 means "be as deterministic as possible"
-                # We want consistent, factual extraction — no creativity.
+                # We want consistent, factual extraction - no creativity.
                 temperature=0.0,
                 # max_tokens limits the response length.
                 # 2000 is enough for ~30 propositions (more than any chunk will have).
@@ -232,17 +232,17 @@ def extract_propositions_from_chunk(
             
         except json.JSONDecodeError as e:
             # The LLM didn't produce valid JSON. Retry.
-            print(f"⚠️  JSON parse error on attempt {attempt + 1}: {e}")
+            print(f"  JSON parse error on attempt {attempt + 1}: {e}")
             if attempt < max_retries:
                 print(f"   Retrying... ({attempt + 2}/{max_retries + 1})")
                 continue
             else:
-                print(f"❌ Failed to parse JSON after {max_retries + 1} attempts. Skipping chunk.")
+                print(f" Failed to parse JSON after {max_retries + 1} attempts. Skipping chunk.")
                 return []
                 
         except Exception as e:
             # Something else went wrong (network error, rate limit, etc.)
-            print(f"❌ Error extracting propositions: {e}")
+            print(f" Error extracting propositions: {e}")
             if attempt < max_retries:
                 # Wait a bit before retrying (exponential backoff)
                 import time
@@ -280,7 +280,7 @@ def extract_propositions_from_chunks(
     """
     all_propositions: list[Proposition] = []
     
-    print(f"\n🔬 Extracting propositions from {len(chunks)} chunks...")
+    print(f"\n Extracting propositions from {len(chunks)} chunks...")
     
     for i, chunk in enumerate(chunks):
         print(f"   Chunk {i + 1}/{len(chunks)} [{chunk.section_type.value}]...", end=" ")
@@ -296,6 +296,6 @@ def extract_propositions_from_chunks(
         import time
         time.sleep(1.5)
     
-    print(f"\n✅ Total: {len(all_propositions)} propositions from {len(chunks)} chunks")
+    print(f"\n Total: {len(all_propositions)} propositions from {len(chunks)} chunks")
     
     return all_propositions

@@ -1,11 +1,11 @@
 # ============================================================
-# services/retrieval/bm25_store.py — BM25 Sparse Retrieval
+# services/retrieval/bm25_store.py - BM25 Sparse Retrieval
 # ============================================================
 #
 # WHAT IS BM25?
 # -------------
 # BM25 is Google's ORIGINAL search algorithm (before they added AI).
-# It's a keyword-matching algorithm — it finds documents that contain 
+# It's a keyword-matching algorithm - it finds documents that contain 
 # the same WORDS as your query.
 #
 # ANALOGY:
@@ -28,7 +28,7 @@
 # Example where BM25 shines and vectors fail:
 #   Query: "MMLU benchmark"
 #   Dense retrieval might return results about "model evaluation" in general
-#   BM25 returns results that literally contain "MMLU" — exactly what we want
+#   BM25 returns results that literally contain "MMLU" - exactly what we want
 #
 # Example where vectors shine and BM25 fails:
 #   Query: "how large is the model?"
@@ -58,11 +58,11 @@ class BM25Store:
     We only index PROPOSITIONS (not chunks) with BM25 because:
     - Propositions are short and keyword-dense
     - Chunks have too much noise for keyword matching
-    - Memory is limited — proposition texts are much smaller
+    - Memory is limited - proposition texts are much smaller
     
     The index is rebuilt from scratch each time the app starts 
     (loaded from the saved propositions JSON). This is fine for 
-    demo scale — it takes < 1 second for ~5000 propositions.
+    demo scale - it takes < 1 second for ~5000 propositions.
     """
     
     def __init__(self):
@@ -121,9 +121,9 @@ class BM25Store:
             # BM25Okapi takes a list of tokenized documents
             # It builds the term frequency and IDF tables internally
             self.index = BM25Okapi(self._tokenized_docs)
-            print(f"📚 BM25 index built with {len(self.documents)} propositions")
+            print(f" BM25 index built with {len(self.documents)} propositions")
         else:
-            print("⚠️  BM25 index is empty (no propositions to index)")
+            print("  BM25 index is empty (no propositions to index)")
     
     def search(self, query: str, top_k: int = 10) -> list[dict]:
         """
@@ -168,7 +168,7 @@ class BM25Store:
         for idx in top_indices:
             score = float(scores[idx])
             if score <= 0:
-                # BM25 score of 0 means no keyword overlap at all — skip
+                # BM25 score of 0 means no keyword overlap at all - skip
                 continue
             
             result = dict(self.documents[idx])

@@ -1,5 +1,5 @@
 # ============================================================
-# routers/query.py — Query Processing Endpoint
+# routers/query.py - Query Processing Endpoint
 # ============================================================
 #
 # THE FULL QUERY PIPELINE IN ONE PLACE:
@@ -67,11 +67,11 @@ async def process_query(request: QueryRequest):
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
     
     print(f"\n{'='*60}")
-    print(f"🔍 Query: {query}")
+    print(f" Query: {query}")
     print(f"{'='*60}")
     
     # ---- Step 1: Hybrid Retrieval ----
-    print(f"\n📡 Step 1: Hybrid retrieval...")
+    print(f"\n Step 1: Hybrid retrieval...")
     try:
         # This runs FAISS dense + BM25 sparse + RRF fusion concurrently
         raw_results = await hybrid_retrieve(query, top_k=settings.top_k_retrieval)
@@ -80,7 +80,7 @@ async def process_query(request: QueryRequest):
         raise HTTPException(status_code=500, detail=f"Retrieval failed: {str(e)}")
     
     if not raw_results:
-        # No results at all — index might be empty
+        # No results at all - index might be empty
         return QueryResult(
             query_text=query,
             main_answer="No documents have been indexed yet. Please upload some PDFs first.",
@@ -89,7 +89,7 @@ async def process_query(request: QueryRequest):
         ).model_dump(mode="json")
     
     # ---- Step 2: Cross-encoder Reranking ----
-    print(f"\n🎯 Step 2: Reranking top {len(raw_results)} candidates...")
+    print(f"\n Step 2: Reranking top {len(raw_results)} candidates...")
     
     # We run reranking in an executor because it's CPU-bound (not I/O-bound)
     # Running it in executor prevents it from blocking the async event loop
@@ -123,7 +123,7 @@ async def process_query(request: QueryRequest):
         retrieved_props.append(prop)
     
     # ---- Step 3: Contradiction Detection ----
-    print(f"\n⚡ Step 3: Checking {len(retrieved_props)} propositions for contradictions...")
+    print(f"\n Step 3: Checking {len(retrieved_props)} propositions for contradictions...")
     
     contradictions = await loop.run_in_executor(
         None,
@@ -134,7 +134,7 @@ async def process_query(request: QueryRequest):
     print(f"   Found {len(contradictions)} contradiction(s)")
     
     # ---- Step 4: Structured Generation ----
-    print(f"\n✍️  Step 4: Generating structured answer...")
+    print(f"\n  Step 4: Generating structured answer...")
     
     prose_answer, raw_claims = await loop.run_in_executor(
         None,
@@ -145,11 +145,11 @@ async def process_query(request: QueryRequest):
     )
     
     # ---- Step 5: Source Verification (Hallucination Guard) ----
-    print(f"\n🔒 Step 5: Verifying sources (hallucination guard)...")
+    print(f"\n Step 5: Verifying sources (hallucination guard)...")
     verified_claims = verify_sources(raw_claims, retrieved_props)
     
     # ---- Step 6: Claim Classification ----
-    print(f"\n🏷️  Step 6: Classifying claims (Consensus/Disputed/Single-Source)...")
+    print(f"\n  Step 6: Classifying claims (Consensus/Disputed/Single-Source)...")
     classified_claims = classify_all_claims(verified_claims, retrieved_props, contradictions)
     
     # ---- Step 7: Confidence Calibration ----
@@ -172,7 +172,7 @@ async def process_query(request: QueryRequest):
         processing_time_seconds=round(total_time, 2)
     )
     
-    print(f"\n✅ Query complete in {total_time:.1f}s")
+    print(f"\n Query complete in {total_time:.1f}s")
     print(f"   Claims: {len(classified_claims)}, Contradictions: {len(contradictions)}")
     print(f"   Confidence: {confidence.overall:.2f}")
     

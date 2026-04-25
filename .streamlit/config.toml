@@ -1,12 +1,12 @@
 # ============================================================
-# .streamlit/config.toml — Streamlit Configuration
+# .streamlit/config.toml - Streamlit Configuration
 # ============================================================
 # This file configures the Streamlit app's appearance and behavior.
 # It's read automatically by Streamlit when the app starts.
 # ============================================================
 
 [theme]
-# Dark theme — matches our custom CSS badges
+# Dark theme - matches our custom CSS badges
 base = "dark"
 primaryColor = "#4C9BE8"       # Blue for primary buttons
 backgroundColor = "#0e0e1a"    # Very dark background

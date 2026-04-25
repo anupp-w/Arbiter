@@ -1,5 +1,5 @@
 # ============================================================
-# services/ingestion/pipeline.py — Full Ingestion Orchestrator
+# services/ingestion/pipeline.py - Full Ingestion Orchestrator
 # ============================================================
 #
 # WHAT THIS FILE DOES:
@@ -66,7 +66,7 @@ _all_chunks: dict[str, ContextChunk] = {}  # key: chunk ID
 def _save_state() -> None:
     """
     Save the current state (documents, propositions, chunks) to JSON files.
-    This is our "poor man's database" — it works for demo scale.
+    This is our "poor man's database" - it works for demo scale.
     """
     settings.data_dir.mkdir(parents=True, exist_ok=True)
     
@@ -101,7 +101,7 @@ def _load_state() -> None:
             doc_id: Document(**doc_data) 
             for doc_id, doc_data in docs_data.items()
         }
-        print(f"📂 Loaded {len(_documents)} documents from disk")
+        print(f" Loaded {len(_documents)} documents from disk")
     
     # Load propositions
     if settings.propositions_path.exists():
@@ -111,7 +111,7 @@ def _load_state() -> None:
             pid: Proposition(**pdata) 
             for pid, pdata in props_data.items()
         }
-        print(f"📂 Loaded {len(_all_propositions)} propositions from disk")
+        print(f" Loaded {len(_all_propositions)} propositions from disk")
     
     # Load chunks
     if settings.chunks_path.exists():
@@ -121,7 +121,7 @@ def _load_state() -> None:
             cid: ContextChunk(**cdata) 
             for cid, cdata in chunks_data.items()
         }
-        print(f"📂 Loaded {len(_all_chunks)} chunks from disk")
+        print(f" Loaded {len(_all_chunks)} chunks from disk")
     
     # Rebuild BM25 index from loaded propositions
     if _all_propositions:
@@ -180,18 +180,18 @@ async def run_ingestion_pipeline(doc_id: str, pdf_path: str) -> None:
     """
     doc = _documents.get(doc_id)
     if not doc:
-        print(f"❌ Document {doc_id} not found in registry!")
+        print(f" Document {doc_id} not found in registry!")
         return
     
     try:
         # ---- Update status ----
         doc.status = DocumentStatus.PROCESSING
         print(f"\n{'='*60}")
-        print(f"🚀 Starting ingestion for: {doc.title}")
+        print(f" Starting ingestion for: {doc.title}")
         print(f"{'='*60}")
         
         # ---- Step 1: Parse PDF ----
-        print(f"\n📄 Step 1/6: Parsing PDF...")
+        print(f"\n Step 1/6: Parsing PDF...")
         text_blocks = parse_pdf(pdf_path)
         
         if not text_blocks:
@@ -199,7 +199,7 @@ async def run_ingestion_pipeline(doc_id: str, pdf_path: str) -> None:
                            "It might be a scanned image (not searchable text).")
         
         # ---- Step 2: Create chunks ----
-        print(f"\n✂️  Step 2/6: Creating chunks...")
+        print(f"\n  Step 2/6: Creating chunks...")
         chunks = create_chunks(text_blocks, doc_id=doc.id)
         doc.num_chunks = len(chunks)
         
@@ -208,7 +208,7 @@ async def run_ingestion_pipeline(doc_id: str, pdf_path: str) -> None:
             _all_chunks[chunk.id] = chunk
         
         # ---- Step 3: Extract propositions ----
-        print(f"\n🔬 Step 3/6: Extracting propositions (this takes a while)...")
+        print(f"\n Step 3/6: Extracting propositions (this takes a while)...")
         propositions = extract_propositions_from_chunks(chunks, doc_title=doc.title)
         doc.num_propositions = len(propositions)
         
@@ -217,7 +217,7 @@ async def run_ingestion_pipeline(doc_id: str, pdf_path: str) -> None:
             _all_propositions[prop.id] = prop
         
         # ---- Step 4: Embed chunks ----
-        print(f"\n📐 Step 4/6: Embedding {len(chunks)} chunks...")
+        print(f"\n Step 4/6: Embedding {len(chunks)} chunks...")
         embedder = get_embedder()
         chunk_texts = [c.text for c in chunks]
         chunk_vectors = embedder.embed_batch(chunk_texts)
@@ -241,7 +241,7 @@ async def run_ingestion_pipeline(doc_id: str, pdf_path: str) -> None:
         chunk_store.add(chunk_vectors, chunk_metadata)
         
         # ---- Step 5: Embed propositions ----
-        print(f"\n📐 Step 5/6: Embedding {len(propositions)} propositions...")
+        print(f"\n Step 5/6: Embedding {len(propositions)} propositions...")
         prop_texts = [p.text for p in propositions]
         prop_vectors = embedder.embed_batch(prop_texts)
         
@@ -263,7 +263,7 @@ async def run_ingestion_pipeline(doc_id: str, pdf_path: str) -> None:
         prop_store.add(prop_vectors, prop_metadata)
         
         # ---- Step 6: Update BM25 + Save ----
-        print(f"\n💾 Step 6/6: Updating BM25 index and saving...")
+        print(f"\n Step 6/6: Updating BM25 index and saving...")
         
         # Rebuild BM25 with ALL propositions (existing + new)
         all_prop_metadata = [
@@ -289,7 +289,7 @@ async def run_ingestion_pipeline(doc_id: str, pdf_path: str) -> None:
         _save_state()
         
         print(f"\n{'='*60}")
-        print(f"✅ Ingestion complete for: {doc.title}")
+        print(f" Ingestion complete for: {doc.title}")
         print(f"   Chunks: {doc.num_chunks}")
         print(f"   Propositions: {doc.num_propositions}")
         print(f"{'='*60}\n")
@@ -301,7 +301,7 @@ async def run_ingestion_pipeline(doc_id: str, pdf_path: str) -> None:
         doc.error_message = str(e)
         _save_state()
         
-        print(f"\n❌ Ingestion FAILED for {doc.title}:")
+        print(f"\n Ingestion FAILED for {doc.title}:")
         print(f"   {e}")
         traceback.print_exc()
 
@@ -332,7 +332,7 @@ def create_document_record(filename: str, pdf_path: str) -> Document:
     _documents[doc.id] = doc
     _save_state()
     
-    print(f"📝 Created document record: {doc.id} ({doc.title})")
+    print(f" Created document record: {doc.id} ({doc.title})")
     return doc
 
 

@@ -1,5 +1,5 @@
 # ============================================================
-# services/analysis/claim_classifier.py — Consensus/Disputed/Single-Source
+# services/analysis/claim_classifier.py - Consensus/Disputed/Single-Source
 # ============================================================
 #
 # WHAT THIS FILE DOES:
@@ -7,10 +7,10 @@
 # After we generate an answer with individual claims, we need to 
 # assign each claim a STATUS:
 #
-#   🟢 CONSENSUS    → Multiple independent papers agree
-#   🔴 DISPUTED     → Papers directly contradict each other
-#   🟡 SINGLE_SOURCE → Only one paper mentions this
-#   ⚪ INSUFFICIENT  → Not enough evidence found
+#    CONSENSUS    → Multiple independent papers agree
+#    DISPUTED     → Papers directly contradict each other
+#    SINGLE_SOURCE → Only one paper mentions this
+#    INSUFFICIENT  → Not enough evidence found
 #
 # HOW WE DETERMINE STATUS:
 # -------------------------
@@ -69,7 +69,7 @@ def classify_claim(
     
     # ---- Check for contradictions first ----
     # If any of the source propositions are involved in a detected contradiction,
-    # this claim is DISPUTED — even if it comes from multiple sources.
+    # this claim is DISPUTED - even if it comes from multiple sources.
     # Being disputed overrides being consensus.
     source_prop_id_set = set(source_prop_ids)
     

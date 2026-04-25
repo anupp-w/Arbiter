@@ -1,5 +1,5 @@
 # ============================================================
-# services/analysis/contradiction.py — Contradiction Detection Engine
+# services/analysis/contradiction.py - Contradiction Detection Engine
 # ============================================================
 #
 # THIS IS THE DEMO MOMENT OF THE ENTIRE PROJECT.
@@ -23,7 +23,7 @@
 #   "Kaplan et al.'s scaling laws are sub-optimal; model size 
 #    and dataset size should be scaled in equal proportion."
 #
-# → Relationship: CONTRADICT ← This triggers a 🔴 Disputed badge!
+# → Relationship: CONTRADICT ← This triggers a  Disputed badge!
 #
 # HOW IT WORKS:
 # -------------
@@ -40,7 +40,7 @@
 #   Compare: (A,B), (A,C), (A,D), (B,C), (B,D), (C,D)
 #
 # That's n*(n-1)/2 comparisons. For n=6, that's 15.
-# For n=10, that's 45 — too many. We cap at 6 propositions.
+# For n=10, that's 45 - too many. We cap at 6 propositions.
 # ============================================================
 
 import json
@@ -64,8 +64,8 @@ from config import settings
 # PROMPT DESIGN DECISIONS:
 # 1. We show numbered claim pairs (not IDs) for readability
 # 2. We define each relationship type with clear criteria
-# 3. We demand JSON only — no prose explanation before/after
-# 4. We ask for a one-sentence explanation — useful for the UI
+# 3. We demand JSON only - no prose explanation before/after
+# 4. We ask for a one-sentence explanation - useful for the UI
 # ============================================================
 
 CONTRADICTION_SYSTEM_PROMPT = """You are a scientific claim relationship analyzer.
@@ -88,7 +88,7 @@ RELATIONSHIP TYPES:
 RULES:
 - Only classify as CONTRADICT if there is a DIRECT factual conflict.
 - Different findings on different datasets or settings = COMPLEMENT, not CONTRADICT.
-- Be conservative with CONTRADICT — false positives are worse than false negatives.
+- Be conservative with CONTRADICT - false positives are worse than false negatives.
 
 Always respond with valid JSON only. No preamble, no markdown.
 Output format: {"relationships": [{"pair_id": "0-1", "relationship": "SUPPORT|CONTRADICT|COMPLEMENT|UNRELATED", "explanation": "one sentence"}]}"""
@@ -159,7 +159,7 @@ def detect_contradictions(
                 {"role": "system", "content": CONTRADICTION_SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.0,  # Deterministic — we want consistent classifications
+            temperature=0.0,  # Deterministic - we want consistent classifications
             max_tokens=1500,
             response_format={"type": "json_object"}
         )
@@ -169,7 +169,7 @@ def detect_contradictions(
         relationships = data.get("relationships", [])
         
     except (json.JSONDecodeError, Exception) as e:
-        print(f"⚠️  Contradiction detection error: {e}")
+        print(f"  Contradiction detection error: {e}")
         return []
     
     # ---- Process results ----
@@ -201,7 +201,7 @@ def detect_contradictions(
                 explanation=explanation
             )
             contradictions.append(contradiction)
-            print(f"   🔴 CONTRADICTION detected!")
+            print(f"    CONTRADICTION detected!")
             print(f"      A ({prop_a.doc_title}): {prop_a.text[:80]}...")
             print(f"      B ({prop_b.doc_title}): {prop_b.text[:80]}...")
     

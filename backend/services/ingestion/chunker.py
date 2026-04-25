@@ -1,5 +1,5 @@
 # ============================================================
-# services/ingestion/chunker.py — TextBlocks → ContextChunks
+# services/ingestion/chunker.py - TextBlocks → ContextChunks
 # ============================================================
 #
 # WHAT IS CHUNKING?
@@ -61,7 +61,7 @@ from services.ingestion.pdf_parser import TextBlock
 # tiktoken is OpenAI's tokenizer. We use it because:
 # 1. It's fast (written in Rust under the hood)
 # 2. It counts tokens the same way LLMs do
-# 3. "tokens" is the right unit — not characters, not words
+# 3. "tokens" is the right unit - not characters, not words
 #
 # Why tokens, not words?
 # "unhappiness" is 1 word but 3 tokens: "un", "happiness" (maybe 2).
@@ -71,7 +71,7 @@ from services.ingestion.pdf_parser import TextBlock
 
 # "cl100k_base" is the tokenizer used by GPT-4 and similar models.
 # It's close enough to Llama's tokenizer for our chunking purposes.
-# (We don't need exact token counts — approximate is fine for chunking.)
+# (We don't need exact token counts - approximate is fine for chunking.)
 _tokenizer = tiktoken.get_encoding("cl100k_base")
 
 
@@ -191,7 +191,7 @@ def create_chunks(
     
     for block in text_blocks:
         if current_group is None or current_group["section"] != block.section_type:
-            # New section starts — save current group and start a new one
+            # New section starts - save current group and start a new one
             if current_group and current_group["text"].strip():
                 grouped_sections.append(current_group)
             current_group = {
@@ -200,7 +200,7 @@ def create_chunks(
                 "pages": [block.page_number]
             }
         else:
-            # Same section — append text and track pages
+            # Same section - append text and track pages
             current_group["text"] += " " + block.text
             if block.page_number not in current_group["pages"]:
                 current_group["pages"].append(block.page_number)
@@ -248,12 +248,12 @@ def create_chunks(
                 )
                 all_chunks.append(chunk)
     
-    print(f"✅ Created {len(all_chunks)} chunks (target: ~{settings.chunk_size_tokens} tokens each)")
+    print(f" Created {len(all_chunks)} chunks (target: ~{settings.chunk_size_tokens} tokens each)")
     
     # Print token stats for debugging
     if all_chunks:
         token_counts = [c.token_count for c in all_chunks]
-        print(f"   Token range: {min(token_counts)}–{max(token_counts)}, "
+        print(f"   Token range: {min(token_counts)}-{max(token_counts)}, "
               f"avg: {sum(token_counts) // len(token_counts)}")
     
     return all_chunks

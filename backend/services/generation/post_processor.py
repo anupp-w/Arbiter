@@ -1,5 +1,5 @@
 # ============================================================
-# services/generation/post_processor.py — Hallucination Guard + Confidence
+# services/generation/post_processor.py - Hallucination Guard + Confidence
 # ============================================================
 #
 # WHAT THIS FILE DOES:
@@ -13,29 +13,29 @@
 # NORMAL HALLUCINATION DETECTION (bad):
 #   "Ask another LLM to judge if the answer looks accurate."
 #   Problem: LLMs are bad at judging their own outputs.
-#   RAGAS does this — it's LLM-judging-LLM, which is circular.
+#   RAGAS does this - it's LLM-judging-LLM, which is circular.
 #
 # ARBITER'S HALLUCINATION DETECTION (structural):
 #   "Check if every cited source ID actually exists in our database."
 #   If claim says source_ids=["prop-abc-123"] but that ID doesn't
 #   exist in our retrieved propositions → the LLM invented it.
-#   This is a STRUCTURAL check — no LLM judgment needed.
+#   This is a STRUCTURAL check - no LLM judgment needed.
 #   It's binary: the source exists or it doesn't.
 #
 # CONFIDENCE CALIBRATION:
 # -----------------------
 # We compute a transparent confidence score from 4 factors:
 #
-#   1. Retrieval quality (avg reranker score) — 0 to 1
+#   1. Retrieval quality (avg reranker score) - 0 to 1
 #      "Did we find relevant evidence?"
 #
-#   2. Consensus ratio — 0 to 1
+#   2. Consensus ratio - 0 to 1
 #      "What fraction of claims have multi-source support?"
 #
-#   3. Source coverage — 0 to 1
+#   3. Source coverage - 0 to 1
 #      "What fraction of claims have valid source citations?"
 #
-#   4. Fallback penalty — 0 or -0.2
+#   4. Fallback penalty - 0 or -0.2
 #      "Did we have to reformulate the query?"
 #
 # Final = weighted average of these factors.
@@ -87,8 +87,8 @@ def verify_sources(
         
         if hallucinated_sources:
             # The LLM cited a source that doesn't exist.
-            # This is a red flag — downgrade confidence significantly.
-            print(f"   ⚠️  HALLUCINATION DETECTED: Claim cites non-existent "
+            # This is a red flag - downgrade confidence significantly.
+            print(f"     HALLUCINATION DETECTED: Claim cites non-existent "
                   f"source(s): {hallucinated_sources}")
             print(f"      Claim text: {claim.text[:80]}...")
             
@@ -106,7 +106,7 @@ def verify_sources(
     # Count how many claims had issues
     flagged = sum(1 for c in verified if c.confidence <= 0.3)
     if flagged > 0:
-        print(f"   ⚠️  {flagged}/{len(verified)} claims flagged as potentially hallucinated")
+        print(f"     {flagged}/{len(verified)} claims flagged as potentially hallucinated")
     
     return verified
 
@@ -180,11 +180,11 @@ def compute_confidence(
     )
     
     # Penalty if the retrieval fallback was triggered
-    # (means we had to reformulate the query — sign of poor initial retrieval)
+    # (means we had to reformulate the query - sign of poor initial retrieval)
     if fallback_triggered:
         overall = max(0.0, overall - 0.2)
     
-    # Cap at 0.95 — we should never claim 100% confidence
+    # Cap at 0.95 - we should never claim 100% confidence
     overall = min(0.95, overall)
     
     return ConfidenceBreakdown(

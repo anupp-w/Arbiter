@@ -1,5 +1,5 @@
 # ============================================================
-# models/document.py — Document, ContextChunk, Proposition
+# models/document.py - Document, ContextChunk, Proposition
 # ============================================================
 #
 # WHAT ARE THESE MODELS?
@@ -23,14 +23,14 @@
 #
 # WHY PYDANTIC MODELS?
 # --------------------
-# A Pydantic model is like a TypeScript interface — it declares:
+# A Pydantic model is like a TypeScript interface - it declares:
 # "this object MUST have these fields with these types."
 # If you try to create a Document without a title, Pydantic raises
 # an error immediately instead of letting it silently break later.
 #
 # Example:
-#   doc = Document(title="BERT Paper")  → ✅ works (id auto-generated)
-#   doc = Document()                     → ❌ error: title is required
+#   doc = Document(title="BERT Paper")  →  works (id auto-generated)
+#   doc = Document()                     →  error: title is required
 # ============================================================
 
 from pydantic import BaseModel, Field
@@ -69,7 +69,7 @@ class Document(BaseModel):
     
     # ---- Core Metadata ----
     title: str = Field(
-        ...,  # The ... means "REQUIRED — no default value"
+        ...,  # The ... means "REQUIRED - no default value"
         description="Title of the paper."
     )
     authors: list[str] = Field(
@@ -193,16 +193,16 @@ class Proposition(BaseModel):
     It must make sense even if you've never read the paper.
     
     GOOD propositions (what we want):
-      ✅ "BERT achieves 93.5% accuracy on the SQuAD 2.0 benchmark."
-      ✅ "The Transformer architecture uses multi-head self-attention 
+       "BERT achieves 93.5% accuracy on the SQuAD 2.0 benchmark."
+       "The Transformer architecture uses multi-head self-attention 
           instead of recurrence."
-      ✅ "Pre-training on 16GB of text data improves downstream task 
+       "Pre-training on 16GB of text data improves downstream task 
           performance by an average of 12% compared to training from scratch."
     
     BAD propositions (what we filter out):
-      ❌ "The results are shown in Table 3." (not a factual claim)
-      ❌ "It improved." (what improved? by how much? compared to what?)
-      ❌ "BERT is good and also fast and outperforms everything." 
+       "The results are shown in Table 3." (not a factual claim)
+       "It improved." (what improved? by how much? compared to what?)
+       "BERT is good and also fast and outperforms everything." 
          (multiple claims crammed into one)
     
     WHY THIS MATTERS:
@@ -214,7 +214,7 @@ class Proposition(BaseModel):
     more precise.
     
     This technique comes from the RAPTOR and Dense Passage Retrieval 
-    research papers. Nobody does this in tutorials — mentioning it in 
+    research papers. Nobody does this in tutorials - mentioning it in 
     an interview immediately signals you've read actual research.
     """
     
@@ -232,7 +232,7 @@ class Proposition(BaseModel):
     )
     text: str = Field(
         ...,
-        description="The actual proposition text — one atomic factual claim."
+        description="The actual proposition text - one atomic factual claim."
     )
     section_type: SectionType = Field(
         default=SectionType.OTHER,
@@ -248,7 +248,7 @@ class Proposition(BaseModel):
     )
     # We store the document title directly on each proposition
     # so we can display "Source: BERT Paper" without a database join.
-    # This is intentional denormalization — a small price in storage
+    # This is intentional denormalization - a small price in storage
     # for a huge gain in simplicity.
     doc_title: str = Field(
         default="",

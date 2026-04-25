@@ -1,5 +1,5 @@
 # ============================================================
-# services/generation/answer_generator.py — Structured Answer Generation
+# services/generation/answer_generator.py - Structured Answer Generation
 # ============================================================
 #
 # WHAT THIS FILE DOES:
@@ -61,7 +61,7 @@ STRICT RULES:
 3. In the main "answer" field, write a clear, fluid, conversational paragraph. Do NOT include raw proposition IDs (like "prop-abc") in the main answer text. Just write naturally.
 4. If the propositions don't contain enough information to answer the question, say so explicitly.
 5. Do NOT invent information not present in the propositions.
-6. If contradictions exist between papers, present BOTH sides — do not pick one.
+6. If contradictions exist between papers, present BOTH sides - do not pick one.
 
 Always respond with valid JSON only. No preamble, no markdown.
 Output format:
@@ -123,13 +123,13 @@ def generate_answer(
         A tuple of (prose_answer, claims_list).
         - prose_answer: A readable paragraph answering the question.
         - claims_list: Individual claims with source IDs and raw confidence.
-                      Status (CONSENSUS/DISPUTED/etc.) NOT yet assigned here —
+                      Status (CONSENSUS/DISPUTED/etc.) NOT yet assigned here -
                       that happens in claim_classifier.py.
     """
     contradictions = contradictions or []
     
     if not propositions:
-        # No evidence found — return a safe "insufficient evidence" response
+        # No evidence found - return a safe "insufficient evidence" response
         return (
             "Insufficient evidence found in the indexed documents to answer this question.",
             [Claim(
@@ -184,7 +184,7 @@ def generate_answer(
         data = json.loads(raw)
         
     except Exception as e:
-        print(f"❌ Generation error: {e}")
+        print(f" Generation error: {e}")
         return (
             f"An error occurred during answer generation: {str(e)}\n\n(If this is a RateLimitError, wait 60 seconds for your Groq limits to reset!)",
             []
@@ -195,7 +195,7 @@ def generate_answer(
     raw_claims = data.get("claims", [])
     
     # Convert raw claim dicts to Claim objects
-    # Note: status is NOT set here — that's done in claim_classifier.py
+    # Note: status is NOT set here - that's done in claim_classifier.py
     claims = []
     for raw_claim in raw_claims:
         claim = Claim(

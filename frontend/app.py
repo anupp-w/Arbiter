@@ -1,5 +1,5 @@
 # ============================================================
-# frontend/app.py — Streamlit UI (Main Entry Point)
+# frontend/app.py - Streamlit UI (Main Entry Point)
 # ============================================================
 #
 # WHAT IS STREAMLIT?
@@ -44,8 +44,8 @@ import json
 # This MUST be the first Streamlit command in the file.
 # It sets the browser tab title, icon, and layout.
 st.set_page_config(
-    page_title="Arbiter — Research Synthesizer",
-    page_icon="⚖️",
+    page_title="Arbiter - Research Synthesizer",
+    page_icon="",
     layout="wide",  # Use full browser width
     initial_sidebar_state="expanded"
 )
@@ -97,7 +97,7 @@ except ImportError as e:
 
 
 # ============================================================
-# CUSTOM CSS — Make the badges look beautiful
+# CUSTOM CSS - Make the badges look beautiful
 # ============================================================
 # Streamlit's default styling is fine but we want the claim 
 # badges (Consensus/Disputed/Single-Source) to really POP.
@@ -254,12 +254,12 @@ def load_reranker():
 def get_badge_html(status: str) -> str:
     """Return the HTML for a colored status badge."""
     status_map = {
-        "consensus":    ("badge-consensus", "🟢 Consensus"),
-        "disputed":     ("badge-disputed",  "🔴 Disputed"),
-        "single_source":("badge-single",    "🟡 Single Source"),
-        "insufficient": ("badge-insufficient", "⚪ Insufficient"),
+        "consensus":    ("badge-consensus", "Consensus"),
+        "disputed":     ("badge-disputed",  "Disputed"),
+        "single_source":("badge-single",    "Single Source"),
+        "insufficient": ("badge-insufficient", "Insufficient"),
     }
-    css_class, label = status_map.get(status, ("badge-insufficient", "⚪ Unknown"))
+    css_class, label = status_map.get(status, ("badge-insufficient", "Unknown"))
     return f'<span class="badge {css_class}">{label}</span>'
 
 
@@ -296,18 +296,18 @@ def render_claim_card(claim: dict, prop_lookup: dict) -> None:
         f"""<div class="claim-card {card_class}">
             {get_badge_html(status)}
             <div class="claim-text">{text}</div>
-            <div class="source-label">📄 {source_text}</div>
+            <div class="source-label"> {source_text}</div>
         </div>""",
         unsafe_allow_html=True
     )
     
     # For DISPUTED claims, show the contradiction details in an expander
     if status == "disputed" and contradiction:
-        with st.expander("👁️ See both sides of this disagreement"):
+        with st.expander(" See both sides of this disagreement"):
             st.markdown(
                 '<div class="contradiction-box">'
                 f'<div style="font-size:12px; color:#ff8787; font-weight:700; margin-bottom:8px;">'
-                f'⚠️ {contradiction.get("explanation", "Direct factual conflict detected")}</div>',
+                f' {contradiction.get("explanation", "Direct factual conflict detected")}</div>',
                 unsafe_allow_html=True
             )
             
@@ -340,19 +340,19 @@ def render_claim_card(claim: dict, prop_lookup: dict) -> None:
 
 
 # ============================================================
-# SIDEBAR — Document Management
+# SIDEBAR - Document Management
 # ============================================================
 
 def render_sidebar():
     """Render the left sidebar with document management."""
     
     with st.sidebar:
-        st.markdown("## ⚖️ Arbiter")
+        st.markdown("##  Arbiter")
         st.markdown("*Multi-document research synthesizer*")
         st.divider()
         
         # ---- Upload Section ----
-        st.markdown("### 📄 Upload Paper")
+        st.markdown("###  Upload Paper")
         
         uploaded_file = st.file_uploader(
             "Drop a PDF research paper",
@@ -361,13 +361,13 @@ def render_sidebar():
         )
         
         if uploaded_file:
-            if st.button("📥 Ingest Paper", type="primary", use_container_width=True):
+            if st.button(" Ingest Paper", type="primary", use_container_width=True):
                 _ingest_document(uploaded_file)
         
         st.divider()
         
         # ---- Document List ----
-        st.markdown("### 📚 Indexed Papers")
+        st.markdown("###  Indexed Papers")
         
         if DIRECT_MODE:
             # Convert Pydantic models to dicts so they match the HTTP JSON format
@@ -392,7 +392,7 @@ def render_sidebar():
             prop_count = get_proposition_store().count
             chunk_count = get_chunk_store().count
             
-            st.markdown("### 📊 Index Stats")
+            st.markdown("###  Index Stats")
             col1, col2 = st.columns(2)
             col1.metric("Propositions", prop_count)
             col2.metric("Chunks", chunk_count)
@@ -405,12 +405,12 @@ def _render_doc_status_card(doc: dict) -> None:
     
     # Status icon
     icon_map = {
-        "completed": "✅",
-        "processing": "⏳",
-        "pending": "🕐",
-        "failed": "❌"
+        "completed": "",
+        "processing": "",
+        "pending": "",
+        "failed": ""
     }
-    icon = icon_map.get(status, "❓")
+    icon = icon_map.get(status, "")
     
     with st.container():
         col1, col2 = st.columns([3, 1])
@@ -423,7 +423,7 @@ def _render_doc_status_card(doc: dict) -> None:
         elif status == "processing":
             st.caption("Processing... (refresh to update)")
         elif status == "failed":
-            st.caption(f"❌ Failed: {doc.get('error_message', 'Unknown error')[:50]}")
+            st.caption(f" Failed: {doc.get('error_message', 'Unknown error')[:50]}")
         
         st.markdown("---")
 
@@ -446,7 +446,7 @@ def _ingest_document(uploaded_file) -> None:
                 pdf_path=str(save_path)
             )
             
-            st.success(f"✅ '{doc.title}' queued for processing!")
+            st.success(f" '{doc.title}' queued for processing!")
             st.info(
                 f"Ingestion runs in the background. "
                 f"Refresh the page to see progress. "
@@ -462,12 +462,12 @@ def _ingest_document(uploaded_file) -> None:
                         doc_id=doc.id,
                         pdf_path=str(save_path)
                     ))
-                    st.success(f"✅ '{doc.title}' fully ingested and ready to query!")
+                    st.success(f" '{doc.title}' fully ingested and ready to query!")
                     st.rerun()
                 except Exception as e:
-                    st.error(f"❌ Ingestion failed: {str(e)}")
+                    st.error(f" Ingestion failed: {str(e)}")
         else:
-            # HTTP mode — send to FastAPI
+            # HTTP mode - send to FastAPI
             try:
                 resp = requests.post(
                     f"{BACKEND_URL}/documents",
@@ -476,21 +476,21 @@ def _ingest_document(uploaded_file) -> None:
                 )
                 if resp.ok:
                     data = resp.json()
-                    st.success(f"✅ Paper queued! ID: {data['doc_id']}")
+                    st.success(f" Paper queued! ID: {data['doc_id']}")
                 else:
-                    st.error(f"❌ Upload failed: {resp.text}")
+                    st.error(f" Upload failed: {resp.text}")
             except requests.exceptions.ConnectionError:
-                st.error("❌ Cannot connect to backend. Is FastAPI running on port 8000?")
+                st.error(" Cannot connect to backend. Is FastAPI running on port 8000?")
 
 
 # ============================================================
-# MAIN AREA — Query + Results
+# MAIN AREA - Query + Results
 # ============================================================
 
 def render_main_area():
     """Render the main query area and results panel."""
     
-    st.markdown("# ⚖️ Arbiter")
+    st.markdown("#  Arbiter")
     st.markdown(
         "*Ask a question across your indexed research papers. "
         "Every claim is labeled: **Consensus**, **Disputed**, or **Single-Source**.*"
@@ -499,7 +499,7 @@ def render_main_area():
     
     # ---- Query Input ----
     query = st.text_input(
-        "🔍 Research Question",
+        "Research Question",
         placeholder="e.g. How do different papers approach the scaling of model size?",
         help="Ask any research question. Arbiter will retrieve evidence from all indexed papers.",
         key="query_input"
@@ -507,7 +507,7 @@ def render_main_area():
     
     col1, col2 = st.columns([1, 5])
     with col1:
-        submit = st.button("🔍 Ask Arbiter", type="primary", use_container_width=True)
+        submit = st.button(" Ask Arbiter", type="primary", use_container_width=True)
     
     if submit and query.strip():
         with st.spinner("Retrieving and synthesizing... (this takes ~10 seconds)"):
@@ -520,7 +520,7 @@ def render_main_area():
     
     # ---- Example Queries ----
     st.markdown("---")
-    st.markdown("**💡 Try these example queries:**")
+    st.markdown("** Try these example queries:**")
     
     examples = [
         "How do different papers approach scaling of model size vs data size?",
@@ -539,7 +539,7 @@ def _run_query(query: str) -> dict | None:
     """Run the full query pipeline and return the result dict."""
     
     if DIRECT_MODE:
-        # Direct import mode — call services directly
+        # Direct import mode - call services directly
         import asyncio
         
         try:
@@ -551,7 +551,7 @@ def _run_query(query: str) -> dict | None:
             raw_results = asyncio.run(hybrid_retrieve(query))
             
             if not raw_results:
-                st.warning("⚠️ No relevant documents found. Have you uploaded any papers?")
+                st.warning(" No relevant documents found. Have you uploaded any papers?")
                 return None
             
             # Rerank
@@ -594,14 +594,14 @@ def _run_query(query: str) -> dict | None:
             }
             
         except Exception as e:
-            st.error(f"❌ Query failed: {str(e)}")
+            st.error(f" Query failed: {str(e)}")
             import traceback
             with st.expander("Error details"):
                 st.code(traceback.format_exc())
             return None
     
     else:
-        # HTTP mode — call FastAPI
+        # HTTP mode - call FastAPI
         try:
             resp = requests.post(
                 f"{BACKEND_URL}/query",
@@ -611,16 +611,16 @@ def _run_query(query: str) -> dict | None:
             if resp.ok:
                 return resp.json()
             else:
-                st.error(f"❌ Query failed: {resp.text}")
+                st.error(f" Query failed: {resp.text}")
                 return None
         except requests.exceptions.ConnectionError:
-            st.error("❌ Cannot connect to backend. Is FastAPI running on port 8000?")
+            st.error(" Cannot connect to backend. Is FastAPI running on port 8000?")
             return None
 
 
 def _render_results(result: dict) -> None:
     """
-    Render the full structured answer — the WOW FACTOR of Arbiter.
+    Render the full structured answer - the WOW FACTOR of Arbiter.
     
     This renders:
     1. Prose answer at the top
@@ -642,10 +642,10 @@ def _render_results(result: dict) -> None:
     
     # Stats row
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("🟢 Consensus", consensus_count)
-    col2.metric("🔴 Disputed", disputed_count)
-    col3.metric("🟡 Single Source", single_count)
-    col4.metric("📊 Confidence", f"{confidence.get('overall', 0)*100:.0f}%")
+    col1.metric("Consensus", consensus_count)
+    col2.metric("Disputed", disputed_count)
+    col3.metric("Single Source", single_count)
+    col4.metric("Confidence", f"{confidence.get('overall', 0)*100:.0f}%")
     
     st.divider()
     
@@ -693,11 +693,11 @@ def _render_results(result: dict) -> None:
         st.progress(src_coverage)
     
     if confidence.get("fallback_triggered"):
-        st.warning("⚠️ Retrieval fallback was triggered — initial search found poor results.")
+        st.warning(" Retrieval fallback was triggered - initial search found poor results.")
     
     # ---- Sources ----
     if retrieved:
-        with st.expander(f"📚 View {len(retrieved)} retrieved propositions"):
+        with st.expander(f" View {len(retrieved)} retrieved propositions"):
             for i, prop in enumerate(retrieved):
                 st.markdown(f"**[{i+1}] {prop.get('doc_title', '')}** *(relevance: {prop.get('reranker_score', 0):.3f})*")
                 st.markdown(f"> {prop.get('text', '')}")
@@ -707,11 +707,11 @@ def _render_results(result: dict) -> None:
 
 
 # ============================================================
-# MAIN — Assemble the App
+# MAIN - Assemble the App
 # ============================================================
 
 def main():
-    """Main entry point — renders sidebar + main area."""
+    """Main entry point - renders sidebar + main area."""
     render_sidebar()
     render_main_area()
 

@@ -1,5 +1,5 @@
 # ============================================================
-# services/retrieval/reranker.py — Cross-Encoder Reranking
+# services/retrieval/reranker.py - Cross-Encoder Reranking
 # ============================================================
 #
 # WHAT IS RERANKING?
@@ -71,7 +71,7 @@ class Reranker:
         run (~130MB) and uses GPU if available.
         """
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        print(f"📦 Loading reranker: {settings.reranker_model} (on {device})...")
+        print(f" Loading reranker: {settings.reranker_model} (on {device})...")
         
         self.model = CrossEncoder(
             settings.reranker_model,
@@ -79,7 +79,7 @@ class Reranker:
             device=device
         )
         
-        print("✅ Reranker loaded!")
+        print(" Reranker loaded!")
     
     def rerank(
         self, 
@@ -121,7 +121,7 @@ class Reranker:
         # On your 1650Ti: ~15 pairs takes ~0.3-0.5 seconds
         #
         # batch_size=16 means we process up to 16 pairs at once.
-        # For 15 results, this means one batch — efficient.
+        # For 15 results, this means one batch - efficient.
         raw_scores = self.model.predict(
             pairs,
             batch_size=16,
@@ -158,7 +158,7 @@ class Reranker:
             print(f"   Reranker scores: max={max(scores_array):.3f}, "
                   f"min={min(scores_array):.3f}, spread={score_spread:.3f}")
             if score_spread < 0.1:
-                print("   ⚠️  Low score spread — retrieval quality may be poor")
+                print("     Low score spread - retrieval quality may be poor")
         
         return scored_results[:top_k]
 

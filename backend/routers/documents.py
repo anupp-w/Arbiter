@@ -1,5 +1,5 @@
 # ============================================================
-# routers/documents.py — Document Upload & Status Endpoints
+# routers/documents.py - Document Upload & Status Endpoints
 # ============================================================
 #
 # FastAPI ENDPOINTS EXPLAINED:
@@ -16,19 +16,19 @@
 #
 # THE TWO ENDPOINTS HERE:
 # -----------------------
-# 1. POST /documents — Upload a PDF for ingestion
+# 1. POST /documents - Upload a PDF for ingestion
 #    - Accepts the PDF file
 #    - Saves it to disk
 #    - Creates a Document record (status: PENDING)
 #    - Returns immediately with doc_id (doesn't wait for ingestion)
 #    - Kicks off ingestion as a BACKGROUND TASK
 #
-# 2. GET /documents/{doc_id}/status — Check ingestion progress
+# 2. GET /documents/{doc_id}/status - Check ingestion progress
 #    - Returns the Document with its current status
 #    - The UI polls this every 3 seconds after upload
 #    - When status = COMPLETED, the UI stops polling
 #
-# 3. GET /documents — List all documents
+# 3. GET /documents - List all documents
 #    - Returns all documents with their status
 #    - Used by the sidebar to show what's been indexed
 # ============================================================
@@ -49,7 +49,7 @@ from services.ingestion.pipeline import (
 )
 from config import settings
 
-# APIRouter is like a "mini app" — we define routes here, 
+# APIRouter is like a "mini app" - we define routes here, 
 # then attach this router to the main FastAPI app in main.py.
 # This keeps our code organized: documents routes in one file,
 # query routes in another.
@@ -91,7 +91,7 @@ async def upload_document(
     settings.documents_dir.mkdir(parents=True, exist_ok=True)
     
     # Create the save path
-    # We use the original filename — if duplicates exist, overwrite is fine 
+    # We use the original filename - if duplicates exist, overwrite is fine 
     # for a portfolio project (production would add a UUID suffix)
     save_path = settings.documents_dir / file.filename
     

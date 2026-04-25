@@ -1,5 +1,5 @@
 # ============================================================
-# services/tracing/setup.py — Arize Phoenix Observability
+# services/tracing/setup.py - Arize Phoenix Observability
 # ============================================================
 #
 # WHAT IS TRACING?
@@ -45,7 +45,7 @@ def setup_tracing(app: FastAPI) -> None:
     
     Call this once on application startup.
     """
-    print("📈 Initializing Phoenix OpenTelemetry tracing...")
+    print(" Initializing Phoenix OpenTelemetry tracing...")
     
     # Create the tracer provider
     provider = TracerProvider()
@@ -62,11 +62,11 @@ def setup_tracing(app: FastAPI) -> None:
         # Set this as the global tracer provider
         trace.set_tracer_provider(provider)
         
-        print(f"✅ Tracing configured. Phoenix UI available at http://localhost:6006")
+        print(f" Tracing configured. Phoenix UI available at http://localhost:6006")
         print("   (Note: You need to start the Phoenix server separately: python -m phoenix.server.main)")
         
     except Exception as e:
-        print(f"⚠️  Could not configure tracing: {e}")
+        print(f"  Could not configure tracing: {e}")
 
 
 def get_tracer(name: str):

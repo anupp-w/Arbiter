@@ -1,5 +1,5 @@
 # ============================================================
-# services/retrieval/faiss_store.py — FAISS Vector Index Manager
+# services/retrieval/faiss_store.py - FAISS Vector Index Manager
 # ============================================================
 #
 # WHAT IS FAISS?
@@ -15,17 +15,17 @@
 # --------
 # Imagine a huge room full of books, and each book has a GPS coordinate 
 # based on its topic. FAISS is like saying "find the 10 books closest 
-# to THIS GPS point" — but in 384-dimensional space instead of 2D.
+# to THIS GPS point" - but in 384-dimensional space instead of 2D.
 #
 # WHY TWO INDEXES?
 # ----------------
 # We maintain TWO separate FAISS indexes:
 #
-# 1. PROPOSITION INDEX — stores embeddings of atomic facts
+# 1. PROPOSITION INDEX - stores embeddings of atomic facts
 #    "BERT achieves 93.5% on SQuAD" → vector → stored here
 #    GOOD FOR: finding precise factual answers
 #
-# 2. CHUNK INDEX — stores embeddings of ~400-token chunks
+# 2. CHUNK INDEX - stores embeddings of ~400-token chunks
 #    "In this section we describe the BERT model..." → vector → stored here
 #    GOOD FOR: getting full context around a finding
 #
@@ -119,7 +119,7 @@ class FAISSStore:
         appended to our metadata list.
         
         Args:
-            vectors: numpy array of shape (n, 384) — n embedding vectors.
+            vectors: numpy array of shape (n, 384) - n embedding vectors.
             metadata_list: List of n dicts, one per vector, containing 
                           the text and identifiers for each vector.
         
@@ -143,10 +143,10 @@ class FAISSStore:
             )
         
         if vectors.ndim == 1:
-            # Single vector — reshape to (1, dimension)
+            # Single vector - reshape to (1, dimension)
             vectors = vectors.reshape(1, -1)
         
-        # Ensure float32 — FAISS requires this specific type
+        # Ensure float32 - FAISS requires this specific type
         vectors = vectors.astype(np.float32)
         
         # Add to FAISS index
@@ -155,7 +155,7 @@ class FAISSStore:
         # Add to metadata list (in the same order!)
         self.metadata.extend(metadata_list)
         
-        print(f"   📥 Added {len(vectors)} vectors to '{self.name}' index "
+        print(f"    Added {len(vectors)} vectors to '{self.name}' index "
               f"(total: {self.index.ntotal})")
     
     def search(self, query_vector: np.ndarray, top_k: int = 10) -> list[dict]:
@@ -186,7 +186,7 @@ class FAISSStore:
             0.798 | Pre-training improves downstream performance by 4.5%...
         """
         if self.index.ntotal == 0:
-            # No vectors stored yet — return empty results
+            # No vectors stored yet - return empty results
             return []
         
         # Reshape if needed: FAISS expects shape (1, dimension) for a single query
@@ -200,8 +200,8 @@ class FAISSStore:
         
         # ---- FAISS search ----
         # Returns two arrays:
-        # - scores: shape (1, actual_k) — similarity scores
-        # - indices: shape (1, actual_k) — positions in the index
+        # - scores: shape (1, actual_k) - similarity scores
+        # - indices: shape (1, actual_k) - positions in the index
         #
         # Example: scores = [[0.847, 0.812, 0.798]], indices = [[42, 17, 3]]
         # This means vector #42 is most similar (score 0.847), etc.
@@ -227,8 +227,8 @@ class FAISSStore:
         
         Called after ingesting documents so we don't lose the index 
         when the server restarts. Two files are saved:
-        - {name}.index — the FAISS binary index file
-        - {name}_metadata.json — the metadata JSON file
+        - {name}.index - the FAISS binary index file
+        - {name}_metadata.json - the metadata JSON file
         """
         # Create the directory if it doesn't exist
         settings.faiss_dir.mkdir(parents=True, exist_ok=True)
@@ -240,7 +240,7 @@ class FAISSStore:
         with open(self.metadata_path, "w", encoding="utf-8") as f:
             json.dump(self.metadata, f, indent=2, ensure_ascii=False)
         
-        print(f"💾 Saved '{self.name}' index ({self.index.ntotal} vectors) to disk")
+        print(f" Saved '{self.name}' index ({self.index.ntotal} vectors) to disk")
     
     def load(self) -> bool:
         """
@@ -250,7 +250,7 @@ class FAISSStore:
             True if loaded successfully, False if files don't exist.
         """
         if not self.index_path.exists() or not self.metadata_path.exists():
-            print(f"⚠️  No saved '{self.name}' index found. Starting fresh.")
+            print(f"  No saved '{self.name}' index found. Starting fresh.")
             return False
         
         try:
@@ -261,17 +261,17 @@ class FAISSStore:
             with open(self.metadata_path, "r", encoding="utf-8") as f:
                 self.metadata = json.load(f)
             
-            print(f"📂 Loaded '{self.name}' index ({self.index.ntotal} vectors) from disk")
+            print(f" Loaded '{self.name}' index ({self.index.ntotal} vectors) from disk")
             
             # Sanity check: metadata count should match vector count
             if len(self.metadata) != self.index.ntotal:
-                print(f"⚠️  Warning: metadata count ({len(self.metadata)}) != "
+                print(f"  Warning: metadata count ({len(self.metadata)}) != "
                       f"vector count ({self.index.ntotal}). Index may be corrupted.")
             
             return True
             
         except Exception as e:
-            print(f"❌ Error loading '{self.name}' index: {e}")
+            print(f" Error loading '{self.name}' index: {e}")
             # Reset to empty state
             self.index = faiss.IndexFlatIP(self.dimension)
             self.metadata = []
@@ -284,7 +284,7 @@ class FAISSStore:
         """
         self.index = faiss.IndexFlatIP(self.dimension)
         self.metadata = []
-        print(f"🗑️  Cleared '{self.name}' index")
+        print(f"  Cleared '{self.name}' index")
     
     @property
     def count(self) -> int:
@@ -295,7 +295,7 @@ class FAISSStore:
 # ============================================================
 # DUAL INDEX SINGLETONS
 # ============================================================
-# We create TWO index instances — one for propositions, one for chunks.
+# We create TWO index instances - one for propositions, one for chunks.
 # These are loaded from disk on startup (if saved data exists).
 # ============================================================
 

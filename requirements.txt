@@ -1,5 +1,5 @@
 # ============================================================
-# Arbiter — Python Dependencies
+# Arbiter - Python Dependencies
 # ============================================================
 # Install with:
 #   .\venv\Scripts\pip install -r requirements.txt

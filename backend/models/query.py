@@ -1,5 +1,5 @@
 # ============================================================
-# models/query.py — Query Request, Result, Claims, Contradictions
+# models/query.py - Query Request, Result, Claims, Contradictions
 # ============================================================
 #
 # WHAT ARE THESE MODELS?
@@ -37,7 +37,7 @@ class QueryRequest(BaseModel):
     """
     What the user sends when they ask a question.
     
-    Simple on purpose — the complexity is in the RESPONSE, not the request.
+    Simple on purpose - the complexity is in the RESPONSE, not the request.
     """
     query_text: str = Field(
         ...,
@@ -104,7 +104,7 @@ class Contradiction(BaseModel):
     
     Example:
     ┌─────────────────────────────────────────────────┐
-    │ 🔴 DISPUTED                                      │
+    │  DISPUTED                                      │
     │                                                   │
     │ Claim A (Kaplan et al., 2020):                   │
     │ "Model size should be scaled faster than          │
@@ -112,7 +112,7 @@ class Contradiction(BaseModel):
     │                                                   │
     │ Claim B (Hoffmann et al., 2022):                 │
     │ "Model size and dataset size should be scaled     │
-    │  equally — Kaplan's scaling laws were suboptimal."│
+    │  equally - Kaplan's scaling laws were suboptimal."│
     │                                                   │
     │ Why they disagree: Different experimental setups  │
     │ and compute budgets led to opposite conclusions   │
@@ -148,13 +148,13 @@ class Claim(BaseModel):
       (Which sources? Any disagreements? Who knows!)
     
     Arbiter output:
-      🟢 "Transformers outperform RNNs." [BERT, GPT-3, RoBERTa]
-      🔴 "Larger models are better." [Kaplan] ⚔️ [Chinchilla disagrees]
-      🟡 "RAG reduces hallucination." [Lewis et al. only]
+       "Transformers outperform RNNs." [BERT, GPT-3, RoBERTa]
+       "Larger models are better." [Kaplan]  [Chinchilla disagrees]
+       "RAG reduces hallucination." [Lewis et al. only]
     """
     
     text: str = Field(
-        ..., description="The claim text — one sentence."
+        ..., description="The claim text - one sentence."
     )
     source_proposition_ids: list[str] = Field(
         default_factory=list,
@@ -189,10 +189,10 @@ class ConfidenceBreakdown(BaseModel):
     ┌────────────────────────────────────┐
     │ Overall Confidence: 73%            │
     │                                    │
-    │ Retrieval Quality:     0.85  ✅    │
-    │ Consensus Ratio:       0.60  ⚠️    │
-    │ Source Coverage:       0.75  ✅    │
-    │ No Fallback Triggered: Yes   ✅    │
+    │ Retrieval Quality:     0.85      │
+    │ Consensus Ratio:       0.60      │
+    │ Source Coverage:       0.75      │
+    │ No Fallback Triggered: Yes       │
     └────────────────────────────────────┘
     
     This transparency is what senior engineers look for.
@@ -258,7 +258,7 @@ class QueryResult(BaseModel):
     main_answer: str = Field(
         default="",
         description=(
-            "The prose answer — a readable paragraph that synthesizes "
+            "The prose answer - a readable paragraph that synthesizes "
             "the evidence. This is what gets displayed at the top of "
             "the results panel."
         )
